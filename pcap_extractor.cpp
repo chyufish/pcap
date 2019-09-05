@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 #include <pcap.h>
 #include <netinet/in.h>
 #include <netinet/if_ether.h>
@@ -104,26 +104,17 @@ int main(int argc, char *argv[]) {
     while ((opt = getopt(argc, argv, optstring)) != -1){
         if(opt == 'd'){
             dev = optarg;
-        }
-        if(opt == 'f'){
+        }else if(opt == 'f'){
             input_file = optarg;
-        }
-        if(opt == 'o'){
+        }else if(opt == 'o'){
             output_file = optarg;
         }
     }
 
-    if (dev == NULL && input_file == NULL) {
+    if ((dev == NULL && input_file == NULL) || (dev && input_file) || (output_file == NULL)) {
+        //-d -t有且只有存在一个
         printf("Usage: %s [-d device | -f input_file] -o output_file\n", argv[0]);
         return 1;
-    }
-    if (dev && input_file) {
-        printf("Usage: %s [-d device | -f input_file] -o output_file\n", argv[0]);
-        return 2;
-    }
-    if(output_file == NULL){
-        printf("Usage: %s [-d device | -f input_file] -o output_file\n", argv[0]);
-        return 3;
     }
 
     char error_buffer[PCAP_ERRBUF_SIZE];
